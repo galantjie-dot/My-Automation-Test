@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { homePage } from '../Pages/homePage';
 import dotenv from 'dotenv';
+import { ProductPage } from '../Pages/productPage';
+import { LoginPage } from '../Pages/LoginPage';
+
 
 // Load environment variables from .env file
 dotenv.config();
@@ -19,9 +22,24 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Shopping at Pick n Pay', () => {
   test('should load homepage', async ({ page }) => {
-    // Use BASE_URL from .env
-    const baseURL = process.env.BASE_URL ?? 'https://www.pnp.co.za/';
+     const baseURL = process.env.BASE_URL ?? 'https://www.pnp.co.za/';
     await page.goto(baseURL);
+    const productPage = new ProductPage(page);
+    await expect(page).toHaveURL(/.*pnp.co.za/);
 
+    // navigate to product page
+    await productPage.navigateToProducts();
+
+    // perform product selections
+ await productPage.selectDropdown('');
+ await productPage.clickToysAndGamesButton();
+ await productPage.clickGamesLink();
+ await productPage.clickAddButton(0);
+ await productPage.fillAddress('');
+ await productPage.saveAddressButton.click();
+
+
+ 
   });
 });
+
